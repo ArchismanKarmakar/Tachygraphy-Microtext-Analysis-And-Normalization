@@ -1,0 +1,2195 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "6bb0e0f6",
+   "metadata": {
+    "_cell_guid": "b1076dfc-b9ad-4769-8c92-a6c4dae69d19",
+    "_uuid": "8f2839f25d086af736a60e9eeb907d3b93b6e0e5",
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:41.278904Z",
+     "iopub.status.busy": "2024-08-21T20:16:41.278598Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.014905Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.013825Z"
+    },
+    "papermill": {
+     "duration": 0.750943,
+     "end_time": "2024-08-21T20:16:42.017250",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:41.266307",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/kaggle/input/dataset-tachygraphy/Tachygraphy_dataset_main.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "# This Python 3 environment comes with many helpful analytics libraries installed\n",
+    "# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python\n",
+    "# For example, here's several helpful packages to load\n",
+    "\n",
+    "import numpy as np # linear algebra\n",
+    "import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)\n",
+    "\n",
+    "# Input data files are available in the read-only \"../input/\" directory\n",
+    "# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory\n",
+    "\n",
+    "import os\n",
+    "for dirname, _, filenames in os.walk('/kaggle/input'):\n",
+    "    for filename in filenames:\n",
+    "        print(os.path.join(dirname, filename))\n",
+    "\n",
+    "# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using \"Save & Run All\" \n",
+    "# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a2850928",
+   "metadata": {
+    "papermill": {
+     "duration": 0.009957,
+     "end_time": "2024-08-21T20:16:42.037610",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.027653",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Text Preprocessing**"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "babf85f1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.059172Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.058752Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.062993Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.062091Z"
+    },
+    "papermill": {
+     "duration": 0.017458,
+     "end_time": "2024-08-21T20:16:42.065007",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.047549",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "3fbeab5e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.086475Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.086171Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.128340Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.127449Z"
+    },
+    "papermill": {
+     "duration": 0.055094,
+     "end_time": "2024-08-21T20:16:42.130310",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.075216",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(4958, 3)"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df=pd.read_csv(\"/kaggle/input/dataset-tachygraphy/Tachygraphy_dataset_main.csv\")\n",
+    "df.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "79859ea7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.152742Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.152420Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.169052Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.168168Z"
+    },
+    "papermill": {
+     "duration": 0.029546,
+     "end_time": "2024-08-21T20:16:42.170936",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.141390",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Text</th>\n",
+       "      <th>Meaning</th>\n",
+       "      <th>Sentiment</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Last session of the day http://twitpic.com/67ezh</td>\n",
+       "      <td>Last session of the day http://twitpic.com/67ezh</td>\n",
+       "      <td>neutral</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Shanghai is also really exciting (precisely --...</td>\n",
+       "      <td>Shanghai is also really exciting (precisely --...</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>submit the report ASAP!</td>\n",
+       "      <td>submit the report as soon as possilbe</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>happy bday!</td>\n",
+       "      <td>Happy Birthday!</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>The OGs - I like it!!</td>\n",
+       "      <td>The original gangsters - i like it!</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                Text  \\\n",
+       "0   Last session of the day http://twitpic.com/67ezh   \n",
+       "1  Shanghai is also really exciting (precisely --...   \n",
+       "2                            submit the report ASAP!   \n",
+       "3                                        happy bday!   \n",
+       "4                              The OGs - I like it!!   \n",
+       "\n",
+       "                                             Meaning Sentiment  \n",
+       "0   Last session of the day http://twitpic.com/67ezh   neutral  \n",
+       "1  Shanghai is also really exciting (precisely --...  positive  \n",
+       "2              submit the report as soon as possilbe  negative  \n",
+       "3                                    Happy Birthday!  positive  \n",
+       "4                The original gangsters - i like it!  positive  "
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "5ef22068",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.193150Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.192837Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.213893Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.213061Z"
+    },
+    "papermill": {
+     "duration": 0.034214,
+     "end_time": "2024-08-21T20:16:42.215743",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.181529",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "class\n",
+       "neutral     1743\n",
+       "positive    1643\n",
+       "negative    1572\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df=df.drop('Meaning',axis=1)\n",
+    "df = df.rename(columns={'Text': 'tweet'})\n",
+    "df = df.rename(columns={'Sentiment': 'class'})\n",
+    "df['class'] = df['class'].str.lower()\n",
+    "sentiment_counts = df['class'].value_counts()\n",
+    "sentiment_counts"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "69f005ea",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.238241Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.237575Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.246308Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.245471Z"
+    },
+    "papermill": {
+     "duration": 0.02198,
+     "end_time": "2024-08-21T20:16:42.248288",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.226308",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "tweet    1\n",
+       "class    0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "c8276ff5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.271154Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.270879Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.276887Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.275874Z"
+    },
+    "papermill": {
+     "duration": 0.019324,
+     "end_time": "2024-08-21T20:16:42.278853",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.259529",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "df=df.fillna('')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "e21508e4",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.300868Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.300583Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.481051Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.480136Z"
+    },
+    "papermill": {
+     "duration": 0.193907,
+     "end_time": "2024-08-21T20:16:42.483304",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.289397",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import re\n",
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "def text_cleaning(text):\n",
+    "    text = str(text)\n",
+    "    soup = BeautifulSoup(text, \"html.parser\")    ###removing html tages\n",
+    "    text = re.sub(r'\\[[^]]*\\]', '', soup.get_text())      ##removing text within square brackets\n",
+    "    pattern = r\"[^a-zA-Z0-9\\s,']\"                  # Removing unwanted characters\n",
+    "    text = re.sub(pattern, '', text)\n",
+    "    url_pattern = r'http\\S+|www\\S+'            ###removing urls\n",
+    "    text = re.sub(url_pattern, '', text)\n",
+    "    return text"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "854098f6",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.505840Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.505444Z",
+     "iopub.status.idle": "2024-08-21T20:16:42.798164Z",
+     "shell.execute_reply": "2024-08-21T20:16:42.797262Z"
+    },
+    "papermill": {
+     "duration": 0.3061,
+     "end_time": "2024-08-21T20:16:42.800108",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.494008",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_23/2827669698.py:6: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.\n",
+      "  soup = BeautifulSoup(text, \"html.parser\")    ###removing html tages\n"
+     ]
+    }
+   ],
+   "source": [
+    "df['tweet']=df['tweet'].apply(text_cleaning).tolist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "a533c6a9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:42.822885Z",
+     "iopub.status.busy": "2024-08-21T20:16:42.822542Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.622148Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.621064Z"
+    },
+    "papermill": {
+     "duration": 12.81388,
+     "end_time": "2024-08-21T20:16:55.624785",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:42.810905",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.feature_extraction.text import CountVectorizer\n",
+    "from keras.models import Sequential\n",
+    "from keras.layers import Dense, Embedding, LSTM, SpatialDropout1D\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "import re"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "0efae1fc",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.649916Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.648895Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.713765Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.712679Z"
+    },
+    "papermill": {
+     "duration": 0.079254,
+     "end_time": "2024-08-21T20:16:55.716055",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.636801",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import tensorflow as tf\n",
+    "from tensorflow.keras.preprocessing.text import Tokenizer\n",
+    "from tensorflow.keras.preprocessing.sequence import pad_sequences\n",
+    "from tensorflow.keras.utils import to_categorical"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "c01892e3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.739669Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.739025Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.743831Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.742816Z"
+    },
+    "papermill": {
+     "duration": 0.018624,
+     "end_time": "2024-08-21T20:16:55.745792",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.727168",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import tensorflow as tf\n",
+    "from tensorflow.keras.preprocessing.text import Tokenizer\n",
+    "from tensorflow.keras.preprocessing.sequence import pad_sequences\n",
+    "from tensorflow.keras.utils import to_categorical"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "caad054b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.768665Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.768365Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.774284Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.773387Z"
+    },
+    "papermill": {
+     "duration": 0.019659,
+     "end_time": "2024-08-21T20:16:55.776222",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.756563",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "dtype('O')"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['tweet'].dtype"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "a5f9dc76",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.799136Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.798846Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.804606Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.803673Z"
+    },
+    "papermill": {
+     "duration": 0.019312,
+     "end_time": "2024-08-21T20:16:55.806523",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.787211",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "dtype('O')"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['class'].dtype"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "0bf50454",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.829541Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.829237Z",
+     "iopub.status.idle": "2024-08-21T20:16:55.839088Z",
+     "shell.execute_reply": "2024-08-21T20:16:55.838208Z"
+    },
+    "papermill": {
+     "duration": 0.023732,
+     "end_time": "2024-08-21T20:16:55.841151",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.817419",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>tweet</th>\n",
+       "      <th>class</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>4948</th>\n",
+       "      <td>time flies by when you're facetiming the bae</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4949</th>\n",
+       "      <td>U dont know how I feel about this</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4950</th>\n",
+       "      <td>come to my job I'll give you a baconator lol</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4951</th>\n",
+       "      <td>Rihanna just made Maya Angelou her avi  you're...</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4952</th>\n",
+       "      <td>im the lil bitch in the theaters tryna hold ba...</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4953</th>\n",
+       "      <td>make a pet face  wtf wrong with me tonight haha</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4954</th>\n",
+       "      <td>I dnt care anymore  Boyz ain't worth d drama</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4955</th>\n",
+       "      <td>No relationship is perfect tho me bae goo from...</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4956</th>\n",
+       "      <td>Over here tryna get my nail polishes and shit lol</td>\n",
+       "      <td>negative</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4957</th>\n",
+       "      <td>No one was loved d way i luv U</td>\n",
+       "      <td>positive</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                  tweet     class\n",
+       "4948       time flies by when you're facetiming the bae  positive\n",
+       "4949                  U dont know how I feel about this  negative\n",
+       "4950       come to my job I'll give you a baconator lol  positive\n",
+       "4951  Rihanna just made Maya Angelou her avi  you're...  negative\n",
+       "4952  im the lil bitch in the theaters tryna hold ba...  negative\n",
+       "4953    make a pet face  wtf wrong with me tonight haha  negative\n",
+       "4954      I dnt care anymore  Boyz ain't worth d drama   negative\n",
+       "4955  No relationship is perfect tho me bae goo from...  negative\n",
+       "4956  Over here tryna get my nail polishes and shit lol  negative\n",
+       "4957                     No one was loved d way i luv U  positive"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.tail(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "3bd7fc23",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:55.865139Z",
+     "iopub.status.busy": "2024-08-21T20:16:55.864379Z",
+     "iopub.status.idle": "2024-08-21T20:16:56.412270Z",
+     "shell.execute_reply": "2024-08-21T20:16:56.411260Z"
+    },
+    "papermill": {
+     "duration": 0.562271,
+     "end_time": "2024-08-21T20:16:56.414635",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:55.852364",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "3286\n",
+      "3144\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_23/1180210649.py:8: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`\n",
+      "  row[0] = row[0].replace('rt',' ')\n",
+      "/tmp/ipykernel_23/1180210649.py:8: FutureWarning: Series.__setitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To set a value by position, use `ser.iloc[pos] = value`\n",
+      "  row[0] = row[0].replace('rt',' ')\n"
+     ]
+    }
+   ],
+   "source": [
+    "df = df[df['class'] != \"neutral\"]  ###droping neutral columns\n",
+    "df['tweet'] = df['tweet'].apply(lambda x: x.lower())\n",
+    "\n",
+    "print(df[ df['class'] == 'positive'].size)\n",
+    "print(df[ df['class'] == 'negative'].size)\n",
+    "\n",
+    "for idx,row in df.iterrows():\n",
+    "    row[0] = row[0].replace('rt',' ')\n",
+    "    \n",
+    "max_fatures = 2000\n",
+    "tokenizer = Tokenizer(num_words=max_fatures, split=' ')\n",
+    "tokenizer.fit_on_texts(df['tweet'].values)\n",
+    "X = tokenizer.texts_to_sequences(df['tweet'].values)\n",
+    "X = pad_sequences(X)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "8af89e68",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:56.440720Z",
+     "iopub.status.busy": "2024-08-21T20:16:56.440186Z",
+     "iopub.status.idle": "2024-08-21T20:16:56.697750Z",
+     "shell.execute_reply": "2024-08-21T20:16:56.696678Z"
+    },
+    "papermill": {
+     "duration": 0.272238,
+     "end_time": "2024-08-21T20:16:56.700189",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:56.427951",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from tensorflow.keras.models import Sequential\n",
+    "from tensorflow.keras.layers import Embedding, SpatialDropout1D, LSTM, Dense, Dropout, Bidirectional\n",
+    "from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau\n",
+    "from tensorflow.keras.optimizers import Adam\n",
+    "from tensorflow.keras.regularizers import l2\n",
+    "from tensorflow.keras.layers import Embedding\n",
+    "from tensorflow.keras.initializers import Constant\n",
+    "from tensorflow.keras.optimizers import RMSprop\n",
+    "from keras_tuner import RandomSearch"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "621a2e6f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:16:56.724873Z",
+     "iopub.status.busy": "2024-08-21T20:16:56.724518Z",
+     "iopub.status.idle": "2024-08-21T20:20:00.463558Z",
+     "shell.execute_reply": "2024-08-21T20:20:00.462131Z"
+    },
+    "papermill": {
+     "duration": 183.755207,
+     "end_time": "2024-08-21T20:20:00.467265",
+     "exception": false,
+     "start_time": "2024-08-21T20:16:56.712058",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/opt/conda/lib/python3.10/pty.py:89: RuntimeWarning: os.fork() was called. os.fork() is incompatible with multithreaded code, and JAX is multithreaded, so this will likely lead to a deadlock.\n",
+      "  pid, fd = os.forkpty()\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "--2024-08-21 20:16:57--  http://nlp.stanford.edu/data/glove.6B.zip\r\n",
+      "Resolving nlp.stanford.edu (nlp.stanford.edu)... 171.64.67.140\r\n",
+      "Connecting to nlp.stanford.edu (nlp.stanford.edu)|171.64.67.140|:80... connected.\r\n",
+      "HTTP request sent, awaiting response... 302 Found\r\n",
+      "Location: https://nlp.stanford.edu/data/glove.6B.zip [following]\r\n",
+      "--2024-08-21 20:16:57--  https://nlp.stanford.edu/data/glove.6B.zip\r\n",
+      "Connecting to nlp.stanford.edu (nlp.stanford.edu)|171.64.67.140|:443... connected.\r\n",
+      "HTTP request sent, awaiting response... 301 Moved Permanently\r\n",
+      "Location: https://downloads.cs.stanford.edu/nlp/data/glove.6B.zip [following]\r\n",
+      "--2024-08-21 20:16:58--  https://downloads.cs.stanford.edu/nlp/data/glove.6B.zip\r\n",
+      "Resolving downloads.cs.stanford.edu (downloads.cs.stanford.edu)... 171.64.64.22\r\n",
+      "Connecting to downloads.cs.stanford.edu (downloads.cs.stanford.edu)|171.64.64.22|:443... connected.\r\n",
+      "HTTP request sent, awaiting response... 200 OK\r\n",
+      "Length: 862182613 (822M) [application/zip]\r\n",
+      "Saving to: 'glove.6B.zip'\r\n",
+      "\r\n",
+      "glove.6B.zip        100%[===================>] 822.24M  5.02MB/s    in 2m 39s  \r\n",
+      "\r\n",
+      "2024-08-21 20:19:37 (5.17 MB/s) - 'glove.6B.zip' saved [862182613/862182613]\r\n",
+      "\r\n",
+      "Archive:  glove.6B.zip\r\n",
+      "  inflating: glove.6B.50d.txt        \r\n",
+      "  inflating: glove.6B.100d.txt       \r\n",
+      "  inflating: glove.6B.200d.txt       \r\n",
+      "  inflating: glove.6B.300d.txt       \r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!wget http://nlp.stanford.edu/data/glove.6B.zip\n",
+    "!unzip glove.6B.zip"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "40f6f63d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:00.687038Z",
+     "iopub.status.busy": "2024-08-21T20:20:00.685969Z",
+     "iopub.status.idle": "2024-08-21T20:20:13.918818Z",
+     "shell.execute_reply": "2024-08-21T20:20:13.917844Z"
+    },
+    "papermill": {
+     "duration": 13.339239,
+     "end_time": "2024-08-21T20:20:13.921221",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:00.581982",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "embedding_index = {}\n",
+    "with open('glove.6B.100d.txt', encoding='utf-8') as f:\n",
+    "    for line in f:\n",
+    "        values = line.split()\n",
+    "        word = values[0]\n",
+    "        coefs = np.asarray(values[1:], dtype='float32')\n",
+    "        embedding_index[word] = coefs\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "bde12770",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:14.074899Z",
+     "iopub.status.busy": "2024-08-21T20:20:14.074495Z",
+     "iopub.status.idle": "2024-08-21T20:20:14.079058Z",
+     "shell.execute_reply": "2024-08-21T20:20:14.078085Z"
+    },
+    "papermill": {
+     "duration": 0.083864,
+     "end_time": "2024-08-21T20:20:14.081132",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:13.997268",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# max_features = 5000  \n",
+    "# embed_dim = 128 \n",
+    "# lstm_out = 64  \n",
+    "# batch_size = 32\n",
+    "# epochs = 20\n",
+    "# learning_rate = 0.001"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "f2ff934f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:14.283049Z",
+     "iopub.status.busy": "2024-08-21T20:20:14.282658Z",
+     "iopub.status.idle": "2024-08-21T20:20:14.287632Z",
+     "shell.execute_reply": "2024-08-21T20:20:14.286743Z"
+    },
+    "papermill": {
+     "duration": 0.128353,
+     "end_time": "2024-08-21T20:20:14.289758",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:14.161405",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "max_features = 10000  \n",
+    "embed_dim = 128 \n",
+    "lstm_out = 64  \n",
+    "batch_size = 64\n",
+    "epochs = 20\n",
+    "initial_learning_rate = 0.0005"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "0aa712f3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:14.446344Z",
+     "iopub.status.busy": "2024-08-21T20:20:14.445570Z",
+     "iopub.status.idle": "2024-08-21T20:20:14.467750Z",
+     "shell.execute_reply": "2024-08-21T20:20:14.466922Z"
+    },
+    "papermill": {
+     "duration": 0.101909,
+     "end_time": "2024-08-21T20:20:14.469956",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:14.368047",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "embedding_dim = 100\n",
+    "embedding_matrix = np.zeros((max_features, embedding_dim))\n",
+    "for word, i in tokenizer.word_index.items():\n",
+    "    if i < max_features:\n",
+    "        embedding_vector = embedding_index.get(word)\n",
+    "        if embedding_vector is not None:\n",
+    "            embedding_matrix[i] = embedding_vector"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "8189e2e9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:14.628054Z",
+     "iopub.status.busy": "2024-08-21T20:20:14.627128Z",
+     "iopub.status.idle": "2024-08-21T20:20:15.495881Z",
+     "shell.execute_reply": "2024-08-21T20:20:15.494726Z"
+    },
+    "papermill": {
+     "duration": 0.952026,
+     "end_time": "2024-08-21T20:20:15.499198",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:14.547172",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/opt/conda/lib/python3.10/site-packages/keras/src/layers/core/embedding.py:90: UserWarning: Argument `input_length` is deprecated. Just remove it.\n",
+      "  warnings.warn(\n"
+     ]
+    }
+   ],
+   "source": [
+    "# from tensorflow.keras.models import Sequential\n",
+    "# from tensorflow.keras.layers import Embedding, SpatialDropout1D, LSTM, Dense\n",
+    "\n",
+    "\n",
+    "# Model\n",
+    "model = Sequential()\n",
+    "model.add(Embedding(max_features, embedding_dim, embeddings_initializer=Constant(embedding_matrix),\n",
+    "                    input_length=X.shape[1], trainable=True))\n",
+    "model.add(SpatialDropout1D(0.3))\n",
+    "model.add(Bidirectional(LSTM(128, return_sequences=True)))\n",
+    "model.add(LSTM(64, dropout=0.4, recurrent_dropout=0.4))\n",
+    "model.add(Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.01)))\n",
+    "model.add(Dropout(0.4))\n",
+    "model.add(Dense(2, activation='softmax'))  # Assuming 2 classes for classification\n",
+    "\n",
+    "# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])\n",
+    "# print(model.summary())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "58d0cc37",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:15.670300Z",
+     "iopub.status.busy": "2024-08-21T20:20:15.669399Z",
+     "iopub.status.idle": "2024-08-21T20:20:15.674518Z",
+     "shell.execute_reply": "2024-08-21T20:20:15.673585Z"
+    },
+    "papermill": {
+     "duration": 0.085962,
+     "end_time": "2024-08-21T20:20:15.676649",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:15.590687",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "tf.random.set_seed(42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "3145a085",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:15.832734Z",
+     "iopub.status.busy": "2024-08-21T20:20:15.831832Z",
+     "iopub.status.idle": "2024-08-21T20:20:15.844442Z",
+     "shell.execute_reply": "2024-08-21T20:20:15.843470Z"
+    },
+    "papermill": {
+     "duration": 0.093176,
+     "end_time": "2024-08-21T20:20:15.846740",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:15.753564",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "optimizer = Adam(learning_rate=initial_learning_rate)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "f759fd5e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:15.999050Z",
+     "iopub.status.busy": "2024-08-21T20:20:15.998401Z",
+     "iopub.status.idle": "2024-08-21T20:20:16.016916Z",
+     "shell.execute_reply": "2024-08-21T20:20:16.015806Z"
+    },
+    "papermill": {
+     "duration": 0.096913,
+     "end_time": "2024-08-21T20:20:16.019093",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:15.922180",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "model.compile(loss='categorical_crossentropy', optimizer=RMSprop(learning_rate=0.001), metrics=['accuracy'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "41417c03",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:16.174531Z",
+     "iopub.status.busy": "2024-08-21T20:20:16.173789Z",
+     "iopub.status.idle": "2024-08-21T20:20:16.197674Z",
+     "shell.execute_reply": "2024-08-21T20:20:16.196719Z"
+    },
+    "papermill": {
+     "duration": 0.10665,
+     "end_time": "2024-08-21T20:20:16.200158",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:16.093508",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\"><span style=\"font-weight: bold\">Model: \"sequential\"</span>\n",
+       "</pre>\n"
+      ],
+      "text/plain": [
+       "\u001b[1mModel: \"sequential\"\u001b[0m\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n",
+       "┃<span style=\"font-weight: bold\"> Layer (type)                    </span>┃<span style=\"font-weight: bold\"> Output Shape           </span>┃<span style=\"font-weight: bold\">       Param # </span>┃\n",
+       "┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n",
+       "│ embedding (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">Embedding</span>)           │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ spatial_dropout1d               │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "│ (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">SpatialDropout1D</span>)              │                        │               │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ bidirectional (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">Bidirectional</span>)   │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ lstm_1 (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">LSTM</span>)                   │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dense (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">Dense</span>)                   │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dropout (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">Dropout</span>)               │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dense_1 (<span style=\"color: #0087ff; text-decoration-color: #0087ff\">Dense</span>)                 │ ?                      │   <span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (unbuilt) │\n",
+       "└─────────────────────────────────┴────────────────────────┴───────────────┘\n",
+       "</pre>\n"
+      ],
+      "text/plain": [
+       "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓\n",
+       "┃\u001b[1m \u001b[0m\u001b[1mLayer (type)                   \u001b[0m\u001b[1m \u001b[0m┃\u001b[1m \u001b[0m\u001b[1mOutput Shape          \u001b[0m\u001b[1m \u001b[0m┃\u001b[1m \u001b[0m\u001b[1m      Param #\u001b[0m\u001b[1m \u001b[0m┃\n",
+       "┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩\n",
+       "│ embedding (\u001b[38;5;33mEmbedding\u001b[0m)           │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ spatial_dropout1d               │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "│ (\u001b[38;5;33mSpatialDropout1D\u001b[0m)              │                        │               │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ bidirectional (\u001b[38;5;33mBidirectional\u001b[0m)   │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ lstm_1 (\u001b[38;5;33mLSTM\u001b[0m)                   │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dense (\u001b[38;5;33mDense\u001b[0m)                   │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dropout (\u001b[38;5;33mDropout\u001b[0m)               │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "├─────────────────────────────────┼────────────────────────┼───────────────┤\n",
+       "│ dense_1 (\u001b[38;5;33mDense\u001b[0m)                 │ ?                      │   \u001b[38;5;34m0\u001b[0m (unbuilt) │\n",
+       "└─────────────────────────────────┴────────────────────────┴───────────────┘\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\"><span style=\"font-weight: bold\"> Total params: </span><span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (0.00 B)\n",
+       "</pre>\n"
+      ],
+      "text/plain": [
+       "\u001b[1m Total params: \u001b[0m\u001b[38;5;34m0\u001b[0m (0.00 B)\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\"><span style=\"font-weight: bold\"> Trainable params: </span><span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (0.00 B)\n",
+       "</pre>\n"
+      ],
+      "text/plain": [
+       "\u001b[1m Trainable params: \u001b[0m\u001b[38;5;34m0\u001b[0m (0.00 B)\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\"><span style=\"font-weight: bold\"> Non-trainable params: </span><span style=\"color: #00af00; text-decoration-color: #00af00\">0</span> (0.00 B)\n",
+       "</pre>\n"
+      ],
+      "text/plain": [
+       "\u001b[1m Non-trainable params: \u001b[0m\u001b[38;5;34m0\u001b[0m (0.00 B)\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "None\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(model.summary())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "c0ad724e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:16.359673Z",
+     "iopub.status.busy": "2024-08-21T20:20:16.358942Z",
+     "iopub.status.idle": "2024-08-21T20:20:16.364999Z",
+     "shell.execute_reply": "2024-08-21T20:20:16.363938Z"
+    },
+    "papermill": {
+     "duration": 0.088083,
+     "end_time": "2024-08-21T20:20:16.367091",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:16.279008",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=1, restore_best_weights=True)\n",
+    "reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=2, min_lr=0.00001, verbose=1)\n",
+    "model_checkpoint = ModelCheckpoint('best_model.keras', save_best_only=True, monitor='val_loss', mode='min')\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "1815f155",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:16.529595Z",
+     "iopub.status.busy": "2024-08-21T20:20:16.528688Z",
+     "iopub.status.idle": "2024-08-21T20:20:16.542623Z",
+     "shell.execute_reply": "2024-08-21T20:20:16.541354Z"
+    },
+    "papermill": {
+     "duration": 0.098524,
+     "end_time": "2024-08-21T20:20:16.544899",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:16.446375",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(2572, 29) (2572, 2)\n",
+      "(643, 29) (643, 2)\n"
+     ]
+    }
+   ],
+   "source": [
+    "Y = pd.get_dummies(df['class']).values\n",
+    "X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size = 0.2, random_state = 42)\n",
+    "print(X_train.shape,Y_train.shape)\n",
+    "print(X_test.shape,Y_test.shape)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "657df58d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:16.702665Z",
+     "iopub.status.busy": "2024-08-21T20:20:16.701789Z",
+     "iopub.status.idle": "2024-08-21T20:20:16.707113Z",
+     "shell.execute_reply": "2024-08-21T20:20:16.706169Z"
+    },
+    "papermill": {
+     "duration": 0.085849,
+     "end_time": "2024-08-21T20:20:16.709042",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:16.623193",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "validation_size = 500\n",
+    "\n",
+    "X_validate = X_test[-validation_size:]\n",
+    "Y_validate = Y_test[-validation_size:]\n",
+    "X_test = X_test[:-validation_size]\n",
+    "Y_test = Y_test[:-validation_size]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "86d32d0f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:20:16.864332Z",
+     "iopub.status.busy": "2024-08-21T20:20:16.863519Z",
+     "iopub.status.idle": "2024-08-21T20:21:46.887738Z",
+     "shell.execute_reply": "2024-08-21T20:21:46.886856Z"
+    },
+    "papermill": {
+     "duration": 90.104364,
+     "end_time": "2024-08-21T20:21:46.889919",
+     "exception": false,
+     "start_time": "2024-08-21T20:20:16.785555",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Epoch 1/20\n",
+      "41/41 - 14s - 348ms/step - accuracy: 0.5420 - loss: 1.1733 - val_accuracy: 0.4755 - val_loss: 1.1361 - learning_rate: 0.0010\n",
+      "Epoch 2/20\n",
+      "41/41 - 2s - 52ms/step - accuracy: 0.6139 - loss: 0.9403 - val_accuracy: 0.5245 - val_loss: 1.1486 - learning_rate: 0.0010\n",
+      "Epoch 3/20\n",
+      "41/41 - 6s - 135ms/step - accuracy: 0.6750 - loss: 0.7869 - val_accuracy: 0.5385 - val_loss: 1.0362 - learning_rate: 0.0010\n",
+      "Epoch 4/20\n",
+      "41/41 - 2s - 52ms/step - accuracy: 0.6936 - loss: 0.6844 - val_accuracy: 0.5175 - val_loss: 1.1300 - learning_rate: 0.0010\n",
+      "Epoch 5/20\n",
+      "41/41 - 5s - 134ms/step - accuracy: 0.7236 - loss: 0.6237 - val_accuracy: 0.5664 - val_loss: 0.9474 - learning_rate: 0.0010\n",
+      "Epoch 6/20\n",
+      "41/41 - 5s - 130ms/step - accuracy: 0.7376 - loss: 0.5841 - val_accuracy: 0.6084 - val_loss: 0.8338 - learning_rate: 0.0010\n",
+      "Epoch 7/20\n",
+      "41/41 - 5s - 132ms/step - accuracy: 0.7570 - loss: 0.5440 - val_accuracy: 0.7343 - val_loss: 0.6894 - learning_rate: 0.0010\n",
+      "Epoch 8/20\n",
+      "41/41 - 2s - 52ms/step - accuracy: 0.7737 - loss: 0.5118 - val_accuracy: 0.5874 - val_loss: 1.0802 - learning_rate: 0.0010\n",
+      "Epoch 9/20\n",
+      "\n",
+      "Epoch 9: ReduceLROnPlateau reducing learning rate to 0.00010000000474974513.\n",
+      "41/41 - 2s - 53ms/step - accuracy: 0.7772 - loss: 0.5025 - val_accuracy: 0.6923 - val_loss: 0.7796 - learning_rate: 0.0010\n",
+      "Epoch 10/20\n",
+      "41/41 - 6s - 138ms/step - accuracy: 0.8025 - loss: 0.4713 - val_accuracy: 0.7552 - val_loss: 0.5205 - learning_rate: 1.0000e-04\n",
+      "Epoch 11/20\n",
+      "41/41 - 2s - 52ms/step - accuracy: 0.8017 - loss: 0.4481 - val_accuracy: 0.7692 - val_loss: 0.5233 - learning_rate: 1.0000e-04\n",
+      "Epoch 12/20\n",
+      "41/41 - 5s - 130ms/step - accuracy: 0.8138 - loss: 0.4484 - val_accuracy: 0.7622 - val_loss: 0.5163 - learning_rate: 1.0000e-04\n",
+      "Epoch 13/20\n",
+      "41/41 - 5s - 129ms/step - accuracy: 0.8142 - loss: 0.4433 - val_accuracy: 0.7762 - val_loss: 0.5112 - learning_rate: 1.0000e-04\n",
+      "Epoch 14/20\n",
+      "41/41 - 5s - 127ms/step - accuracy: 0.8161 - loss: 0.4366 - val_accuracy: 0.7762 - val_loss: 0.5085 - learning_rate: 1.0000e-04\n",
+      "Epoch 15/20\n",
+      "41/41 - 2s - 50ms/step - accuracy: 0.8149 - loss: 0.4331 - val_accuracy: 0.7692 - val_loss: 0.5111 - learning_rate: 1.0000e-04\n",
+      "Epoch 16/20\n",
+      "41/41 - 5s - 129ms/step - accuracy: 0.8145 - loss: 0.4284 - val_accuracy: 0.7762 - val_loss: 0.5076 - learning_rate: 1.0000e-04\n",
+      "Epoch 17/20\n",
+      "41/41 - 2s - 48ms/step - accuracy: 0.8254 - loss: 0.4211 - val_accuracy: 0.7692 - val_loss: 0.5118 - learning_rate: 1.0000e-04\n",
+      "Epoch 18/20\n",
+      "\n",
+      "Epoch 18: ReduceLROnPlateau reducing learning rate to 1.0000000474974514e-05.\n",
+      "41/41 - 2s - 48ms/step - accuracy: 0.8223 - loss: 0.4227 - val_accuracy: 0.7692 - val_loss: 0.5101 - learning_rate: 1.0000e-04\n",
+      "Epoch 19/20\n",
+      "41/41 - 5s - 123ms/step - accuracy: 0.8247 - loss: 0.4224 - val_accuracy: 0.7832 - val_loss: 0.5073 - learning_rate: 1.0000e-05\n",
+      "Epoch 20/20\n",
+      "41/41 - 5s - 127ms/step - accuracy: 0.8227 - loss: 0.4203 - val_accuracy: 0.7902 - val_loss: 0.5057 - learning_rate: 1.0000e-05\n",
+      "Restoring model weights from the end of the best epoch: 20.\n"
+     ]
+    }
+   ],
+   "source": [
+    "# batch_size = 32\n",
+    "# model.fit(X_train, Y_train, epochs = 20, batch_size=batch_size, verbose = 2)\n",
+    "\n",
+    "# Training\n",
+    "history = model.fit(X_train, Y_train,\n",
+    "                    epochs=epochs,\n",
+    "                    batch_size=batch_size,\n",
+    "                    validation_data=(X_test, Y_test),\n",
+    "                    verbose=2,\n",
+    "                    callbacks=[early_stopping, reduce_lr, model_checkpoint])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "fd975fd3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:21:47.055971Z",
+     "iopub.status.busy": "2024-08-21T20:21:47.055570Z",
+     "iopub.status.idle": "2024-08-21T20:21:47.209862Z",
+     "shell.execute_reply": "2024-08-21T20:21:47.208625Z"
+    },
+    "papermill": {
+     "duration": 0.239863,
+     "end_time": "2024-08-21T20:21:47.211938",
+     "exception": false,
+     "start_time": "2024-08-21T20:21:46.972075",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\u001b[1m5/5\u001b[0m \u001b[32m━━━━━━━━━━━━━━━━━━━━\u001b[0m\u001b[37m\u001b[0m \u001b[1m0s\u001b[0m 17ms/step - accuracy: 0.7947 - loss: 0.5039\n",
+      "Test accuracy: 0.7902\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Evaluate the model\n",
+    "test_loss, test_acc = model.evaluate(X_test, Y_test)\n",
+    "print(f\"Test accuracy: {test_acc:.4f}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "d3380556",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:21:47.377026Z",
+     "iopub.status.busy": "2024-08-21T20:21:47.376107Z",
+     "iopub.status.idle": "2024-08-21T20:21:47.496622Z",
+     "shell.execute_reply": "2024-08-21T20:21:47.495513Z"
+    },
+    "papermill": {
+     "duration": 0.205617,
+     "end_time": "2024-08-21T20:21:47.498784",
+     "exception": false,
+     "start_time": "2024-08-21T20:21:47.293167",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "3/3 - 0s - 21ms/step - accuracy: 0.7902 - loss: 0.5057\n",
+      "loss_score: 0.51\n",
+      "accuracy: 0.79\n"
+     ]
+    }
+   ],
+   "source": [
+    "score,acc = model.evaluate(X_test, Y_test,verbose = 2, batch_size = batch_size)\n",
+    "print(\"loss_score: %.2f\" % (score))\n",
+    "print(\"accuracy: %.2f\" % (acc))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "d4d74876",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:21:47.674089Z",
+     "iopub.status.busy": "2024-08-21T20:21:47.673146Z",
+     "iopub.status.idle": "2024-08-21T20:22:22.353526Z",
+     "shell.execute_reply": "2024-08-21T20:22:22.352505Z"
+    },
+    "papermill": {
+     "duration": 34.769776,
+     "end_time": "2024-08-21T20:22:22.355647",
+     "exception": false,
+     "start_time": "2024-08-21T20:21:47.585871",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1/1 - 0s - 377ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 24ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 24ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 43ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 24ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 24ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 25ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 24ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 35ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 35ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 35ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 35ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 34ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 33ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 26ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 32ms/step\n",
+      "1/1 - 0s - 31ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 27ms/step\n",
+      "1/1 - 0s - 28ms/step\n",
+      "1/1 - 0s - 30ms/step\n",
+      "1/1 - 0s - 29ms/step\n",
+      "pos_acc 75.74626865671642 %\n",
+      "neg_acc 83.1896551724138 %\n"
+     ]
+    }
+   ],
+   "source": [
+    "pos_cnt, neg_cnt, pos_correct, neg_correct = 0, 0, 0, 0\n",
+    "for x in range(len(X_validate)):\n",
+    "    \n",
+    "    result = model.predict(X_validate[x].reshape(1,X_test.shape[1]),batch_size=1,verbose = 2)[0]\n",
+    "   \n",
+    "    if np.argmax(result) == np.argmax(Y_validate[x]):\n",
+    "        if np.argmax(Y_validate[x]) == 0:\n",
+    "            neg_correct += 1\n",
+    "        else:\n",
+    "            pos_correct += 1\n",
+    "       \n",
+    "    if np.argmax(Y_validate[x]) == 0:\n",
+    "        neg_cnt += 1\n",
+    "    else:\n",
+    "        pos_cnt += 1\n",
+    "\n",
+    "\n",
+    "\n",
+    "print(\"pos_acc\", pos_correct/pos_cnt*100, \"%\")\n",
+    "print(\"neg_acc\", neg_correct/neg_cnt*100, \"%\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "0dd369f1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:22:22.606116Z",
+     "iopub.status.busy": "2024-08-21T20:22:22.605724Z",
+     "iopub.status.idle": "2024-08-21T20:22:23.055174Z",
+     "shell.execute_reply": "2024-08-21T20:22:23.054053Z"
+    },
+    "papermill": {
+     "duration": 0.577778,
+     "end_time": "2024-08-21T20:22:23.057284",
+     "exception": false,
+     "start_time": "2024-08-21T20:22:22.479506",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[   0    0    0    0    0    0    0    1   79  477    7   18  559 1000\n",
+      "    39  275   55    7   10 1913    6    5  458  165  118   13    4 1562]]\n",
+      "1/1 - 0s - 394ms/step\n",
+      "negative\n"
+     ]
+    }
+   ],
+   "source": [
+    "twt = ['I been told you that yo folks dont care about you . Im starving and my dad deadass didnt make me a plate']\n",
+    "twt = tokenizer.texts_to_sequences(twt)\n",
+    "twt = pad_sequences(twt, maxlen=28, dtype='int32', value=0)\n",
+    "print(twt)\n",
+    "sentiment = model.predict(twt,batch_size=1,verbose = 2)[0]\n",
+    "if(np.argmax(sentiment) == 0):\n",
+    "    print(\"negative\")\n",
+    "elif (np.argmax(sentiment) == 1):\n",
+    "    print(\"positive\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "649dc4b7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-08-21T20:22:23.312879Z",
+     "iopub.status.busy": "2024-08-21T20:22:23.312462Z",
+     "iopub.status.idle": "2024-08-21T20:22:26.346452Z",
+     "shell.execute_reply": "2024-08-21T20:22:26.345598Z"
+    },
+    "papermill": {
+     "duration": 3.166221,
+     "end_time": "2024-08-21T20:22:26.349114",
+     "exception": false,
+     "start_time": "2024-08-21T20:22:23.182893",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "model.save('lstm_model.h5')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8c663477",
+   "metadata": {
+    "papermill": {
+     "duration": 0.124854,
+     "end_time": "2024-08-21T20:22:26.596963",
+     "exception": false,
+     "start_time": "2024-08-21T20:22:26.472109",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ed4cede2",
+   "metadata": {
+    "papermill": {
+     "duration": 0.126575,
+     "end_time": "2024-08-21T20:22:26.850138",
+     "exception": false,
+     "start_time": "2024-08-21T20:22:26.723563",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "nvidiaTeslaT4",
+   "dataSources": [
+    {
+     "datasetId": 5557640,
+     "sourceId": 9193227,
+     "sourceType": "datasetVersion"
+    }
+   ],
+   "dockerImageVersionId": 30762,
+   "isGpuEnabled": true,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.14"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 350.874694,
+   "end_time": "2024-08-21T20:22:29.433617",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2024-08-21T20:16:38.558923",
+   "version": "2.6.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
