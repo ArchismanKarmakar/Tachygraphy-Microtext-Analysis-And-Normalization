@@ -1,2 +1,2 @@
-# Tachygraphy-Microtext-Analysis
+# Tachygraphy-Microtext-Analysis-And-Normalization
 ## Contributors
