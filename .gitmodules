@@ -1,0 +1,3 @@
+[submodule "deployment_HF"]
+	path = deployment_HF
+	url = https://github.com/ArchismanKarmakar/Tachygraphy-Microtext-Analysis-And-Normalization-Deployment-Source.git
