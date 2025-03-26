@@ -67,29 +67,26 @@ Tachygraphy—originally developed to expedite writing—has evolved over centur
 Below is a Graphviz diagram illustrating a sample analysis:
 
 
+# Sample Example 1
+
 ```mermaid
 graph TD;
-    Input["Input: bruh, floods in Kerala, rescue ops non‑stop 🚁"]
-    Output["Output: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
-    Sentiment["Sentiment: NEUTRAL"]
+    A["Input Text:\n i don't know for real y he's sooo sad"] -->|Transformed| B["Normalized Text:\n i do not know for real why he's so sad"]
+    B -->|Analyzed| C["Sentiment"]
+    
+    C -->|0.9958748| D["negative"]
+    C -->|0.0000623| E["neutral"]
+    C -->|0.0000209| F["positive"]
 
-    Anger["Anger: 0.080"]
-    Disgust["Disgust: 0.015"]
-    Fear["Fear: 0.602"]
-    Joy["Joy: 0.004"]
-    Neutral["Neutral: 0.034"]
-    Sadness["Sadness: 0.245"]
-    Surprise["Surprise: 0.019"]
-
-    Input --> Output
-    Input --> Sentiment
-    Sentiment --> Anger
-    Sentiment --> Disgust
-    Sentiment --> Fear
-    Sentiment --> Joy
-    Sentiment --> Neutral
-    Sentiment --> Sadness
-    Sentiment --> Surprise
+    B --> G["Emotion"]
+    
+    G -->|0.0000| H["anger"]
+    G -->|0.0000| I["disgust"]
+    G -->|0.0102| J["fear"]
+    G -->|0.0000| K["joy"]
+    G -->|0.0219| L["neutral"]
+    G -->|1.0000| M["sadness"]
+    G -->|0.0215| N["surprise"]
 ```
 
 ### Sample Example 2
