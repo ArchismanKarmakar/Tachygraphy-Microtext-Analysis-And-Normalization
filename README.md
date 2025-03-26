@@ -141,42 +141,36 @@ linkStyle 3 stroke:#cccccc, stroke-width:1px;
 ### Sample Example 3
 ```mermaid
 graph TD;
-    %% Input and normalized text
-    A["Input Text: i don't know for real y he's sooo sad"]
-    B["Normalized Text: i do not know for real why he's so sad"]
-
-    %% Sentiment stage
+    %% Input and normalized text nodes
+    A["Input Text: bruh, floods in Kerala, rescue ops non‑stop 🚁"]
+    B["Normalized Text: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
     C["Sentiment"]
-    
+
     A --> B
-    A --> C
+    A -->|Sentiment| C
 
-    %% Sentiment value nodes with values inside the box;
-    %% The arrow labels carry the category names.
-    C -->|Negative| D["4.43e-05"]
-    C -->|Neutral| E["0.9999"]
-    C -->|Positive| F["7.09e-05"]
+    %% Sentiment value nodes
+    C -->|Negative| D["4.44e-05"]
+    C -->|Neutral| E["0.99989"]
+    C -->|Positive| F["7.10e-05"]
 
-    %% All sentiment nodes feed into the Emotion stage.
+    %% Converge sentiment nodes to Emotion stage
     D -->|Emotion| G
     E -->|Emotion| G
     F -->|Emotion| G
 
-    %% Emotion stage: arrows label the emotion category, nodes contain the numeric value.
-    G -->|Anger| H["0.0801"]
-    G -->|Disgust| I["0.0152"]
-    G -->|Fear| J["0.0103"]
-    G -->|Joy| K["0.0"]
-    G -->|Neutral| L["0.0219"]
+    %% Emotion nodes: arrow labels show emotion category; node boxes show numeric values.
+    G -->|Anger| H["0.08018"]
+    G -->|Disgust| I["0.01526"]
+    G -->|Fear| J["0.60187"]
+    G -->|Joy| K["0.00411"]
+    G -->|Neutral| L["0.02194"]
     G -->|Sadness| M["1.0"]
-    G -->|Surprise| N["0.0216"]
+    G -->|Surprise| N["0.02158"]
 
-%% Style the edges for lower-probability sentiment arrows with a lighter stroke
-%% (Assuming the second and third edges from C are "Neutral" and "Positive")
+%% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
 linkStyle 3 stroke:#cccccc, stroke-width:1px;
-
-
 
 ```
 
