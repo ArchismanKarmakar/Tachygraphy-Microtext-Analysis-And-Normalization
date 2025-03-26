@@ -122,9 +122,9 @@ graph TD;
 
     %% Sentiment value nodes with values inside the box;
     %% The arrow labels carry the category names.
-    S -->|Negative| D["4.43e-05"]
-    S -->|Neutral| E["0.99999"]
-    S -->|Positive| F["7.09e-05"]
+    C -->|Negative| D["4.43e-05"]
+    C -->|Neutral| E["0.99999"]
+    C -->|Positive| F["7.09e-05"]
 
     %% All sentiment nodes feed into the Emotion stage.
     D -->|Emotion| G
