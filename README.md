@@ -67,7 +67,7 @@ Tachygraphy—originally developed to expedite writing—has evolved over centur
 Below is a Graphviz diagram illustrating a sample analysis:
 
 
-# Sample Example 1
+### Sample Example 1
 
 ```mermaid
 graph TD;
@@ -116,8 +116,8 @@ linkStyle 7 stroke:#cccccc, stroke-width:2px;
 ### Sample Example 2
 ```mermaid
 graph TD;
-    A["Input Text:\n you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
-    B["Normalized Text:\n you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
+    A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
+    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
     C["Sentiment"]
 
     D["Negative: 0.9999861717224121"]
@@ -162,8 +162,8 @@ linkStyle 7 stroke:#cccccc, stroke-width:1px;
 
 ```mermaid
 graph TD;
-    A["Input Text:\nbruh, floods in Kerala, rescue ops non‑stop 🚁"]
-    B["Normalized Text:\nBrother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
+    A["Input Text:bruh, floods in Kerala, rescue ops non‑stop 🚁"]
+    B["Normalized Text:Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
     C["Sentiment"]
     
     D["Negative: 4.4367719965521246e-05"]
