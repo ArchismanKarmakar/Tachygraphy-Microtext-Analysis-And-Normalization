@@ -66,35 +66,30 @@ Tachygraphy—originally developed to expedite writing—has evolved over centur
 
 Below is a Graphviz diagram illustrating a sample analysis:
 
-```dot
-digraph {
-    graph [bgcolor="white", rankdir=TB, splines=true, nodesep=0.8, ranksep=0.8];
-    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=9, margin="0.15,0.1"];
 
-    Input [label="Input:\nbruh, floods in Kerala, rescue ops non‑stop 🚁", fillcolor="#ffe6de", fontcolor="#000000"];
-    Output [label="Output:\nBrother, the floods in Kerala are severe,\nand rescue operations are ongoing continuously.", fillcolor="#ffe6de", fontcolor="#000000"];
-    Sentiment [label="Sentiment:\nNEUTRAL", fillcolor="#ecdeff", fontcolor="black"];
+```mermaid
+graph TD;
+    Input["Input: bruh, floods in Kerala, rescue ops non‑stop 🚁"]
+    Output["Output: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
+    Sentiment["Sentiment: NEUTRAL"]
 
-    Anger [label="Anger: 0.080178231", fillcolor="#deffe1", fontcolor="black"];
-    Disgust [label="Disgust: 0.015257259", fillcolor="#deffe1", fontcolor="black"];
-    Fear [label="Fear: 0.601871967", fillcolor="#deffe1", fontcolor="black"];
-    Joy [label="Joy: 0.00410547", fillcolor="#deffe1", fontcolor="black"];
-    Neutral [label="Neutral: 0.0341026", fillcolor="#deffe1", fontcolor="black"];
-    Sadness [label="Sadness: 0.245294735", fillcolor="#deffe1", fontcolor="black"];
-    Surprise [label="Surprise: 0.019189769", fillcolor="#deffe1", fontcolor="black"];
+    Anger["Anger: 0.080"]
+    Disgust["Disgust: 0.015"]
+    Fear["Fear: 0.602"]
+    Joy["Joy: 0.004"]
+    Neutral["Neutral: 0.034"]
+    Sadness["Sadness: 0.245"]
+    Surprise["Surprise: 0.019"]
 
-    edge [color="#7a7a7a", penwidth=3];
-
-    Input -> Output;
-    Input -> Sentiment;
-    Sentiment -> Anger;
-    Sentiment -> Disgust;
-    Sentiment -> Fear;
-    Sentiment -> Joy;
-    Sentiment -> Neutral;
-    Sentiment -> Sadness;
-    Sentiment -> Surprise;
-}
+    Input --> Output
+    Input --> Sentiment
+    Sentiment --> Anger
+    Sentiment --> Disgust
+    Sentiment --> Fear
+    Sentiment --> Joy
+    Sentiment --> Neutral
+    Sentiment --> Sadness
+    Sentiment --> Surprise
 ```
 
 ### Sample Example 2
