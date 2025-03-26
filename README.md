@@ -88,6 +88,8 @@ graph TD;
     E -->|Emotion| G
     F -->|Emotion| G
 
+    G["Emotion"]
+
     %% Emotion nodes: arrow labels show emotion category; node boxes show numeric values.
     G -->|Anger| H["0.0"]
     G -->|Disgust| I["0.0"]
@@ -124,6 +126,8 @@ graph TD;
     E -->|Emotion| G
     F -->|Emotion| G
 
+    G["Emotion"]
+
     %% Emotion nodes: arrow labels show emotion category; nodes show numeric values.
     G -->|Anger| H["0.14403"]
     G -->|Disgust| I["0.03928"]
@@ -159,7 +163,7 @@ graph TD;
     E -->|Emotion| G
     F -->|Emotion| G
 
-    G
+    G["Emotion"]
 
     %% Emotion nodes: arrow labels show emotion category; node boxes show numeric values.
     G -->|Anger| H["0.08018"]
