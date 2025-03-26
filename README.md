@@ -107,7 +107,7 @@ linkStyle 3 stroke:#cccccc, stroke-width:1px;
 
 ### Sample Example 2
 ```mermaid
-graph TD;
+graph LR;
     %% Input and normalized text nodes
     A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
     B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
