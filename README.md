@@ -74,25 +74,27 @@ graph TD;
     A["Input Text: i don't know for real y he's sooo sad"]
     B["Normalized Text: i do not know for real why he's so sad"]
     C["Sentiment"]
-    
-    C -- Negative: 0.9959 --> G["Emotion"]
-    C -- Neutral: 6.23e-05 --> G
-    C -- Positive: 2.10e-05 --> G
-
-    G -- Anger: 0.0 --> H[" "]
-    G -- Disgust: 0.0 --> I[" "]
-    G -- Fear: 0.0103 --> J[" "]
-    G -- Joy: 0.0 --> K[" "]
-    G -- Neutral: 0.0219 --> L[" "]
-    G -- Sadness: 1.0 --> M[" "]
-    G -- Surprise: 0.0216 --> N[" "]
+    G["Emotion"]
 
     A --> B
     A --> C
 
+    C -- "Negative: 0.9959" --> G
+    C -- "Neutral: 6.23e-05" --> G
+    C -- "Positive: 2.10e-05" --> G
+
+    G -- "Anger" --> H["0.0"]
+    G -- "Disgust" --> I["0.0"]
+    G -- "Fear" --> J["0.0103"]
+    G -- "Joy" --> K["0.0"]
+    G -- "Neutral" --> L["0.0219"]
+    G -- "Sadness" --> M["1.0"]
+    G -- "Surprise" --> N["0.0216"]
+
 %% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke.
 linkStyle 1 stroke:#cccccc, stroke-width:1px;
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
+
 
 
 ```
@@ -112,13 +114,13 @@ graph TD;
     C -->|"Neutral: 6.88e-06"| G
     C -->|"Positive: 1.11e-05"| G
 
-    G -->|"Anger: 0.144"| H[ ]
-    G -->|"Disgust: 0.039"| I[ ]
-    G -->|"Fear: 0.014"| J[ ]
-    G -->|"Joy: 0.048"| K[ ]
-    G -->|"Neutral: 0.494"| L[ ]
-    G -->|"Sadness: 0.021"| M[ ]
-    G -->|"Surprise: 0.237"| N[ ]
+    G -->|"Anger"| H["0.144"]
+    G -->|"Disgust"| I["0.039"]
+    G -->|"Fear"| J["0.014"]
+    G -->|"Joy"| K["0.048"]
+    G -->|"Neutral"| L["0.494"]
+    G -->|"Sadness"| M["0.021"]
+    G -->|"Surprise"| N["0.237"]
 
 %% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
@@ -143,13 +145,13 @@ graph TD;
     C -->|Neutral: 0.9999| G
     C -->|Positive: 7.09e-05| G
 
-    G -->|Anger: 0.0801| H[ ]
-    G -->|Disgust: 0.0152| I[ ]
-    G -->|Fear: 0.6019| J[ ]
-    G -->|Joy: 0.0041| K[ ]
-    G -->|Neutral: 0.0341| L[ ]
-    G -->|Sadness: 0.2453| M[ ]
-    G -->|Surprise: 0.0192| N[ ]
+    G -->|Anger| H["0.0801"]
+    G -->|Disgust| I["0.0152"]
+    G -->|Fear| J["0.0103"]
+    G -->|Joy| K["0.0"]
+    G -->|Neutral| L["0.0219"]
+    G -->|Sadness| M["1.0"]
+    G -->|Surprise| N["0.0216"]
 
 %% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
