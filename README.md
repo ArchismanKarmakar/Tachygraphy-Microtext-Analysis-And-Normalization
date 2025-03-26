@@ -69,39 +69,35 @@ Below is a Graphviz diagram illustrating a sample analysis:
 
 ### Sample Example 1
 ```mermaid
-graph TD;
-    %% Input and normalized text
-    A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
-    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
-
-    %% Sentiment stage
+graph LR;
+    %% Input and normalized text nodes
+    A["Input Text: i don't know for real y he's sooo sad"]
+    B["Normalized Text: i do not know for real why he's so sad"]
     C["Sentiment"]
-    
+
     A --> B
-    A --> C
+    A -->|Sentiment| C
 
-    %% Sentiment value nodes with values inside the box;
-    %% The arrow labels carry the category names.
-    C -->|Negative| D["0.99999"]
+    %% Sentiment value nodes (values inside the boxes)
+    C -->|Negative| D["0.99587"]
     C -->|Neutral| E["6.23e-05"]
-    C -->|Positive| F["7.09e-05"]
+    C -->|Positive| F["2.10e-05"]
 
-    %% All sentiment nodes feed into the Emotion stage.
+    %% Converge sentiment nodes to Emotion stage
     D -->|Emotion| G
     E -->|Emotion| G
     F -->|Emotion| G
 
-    %% Emotion stage: arrows label the emotion category, nodes contain the numeric value.
-    G -->|Anger| H["0.144"]
-    G -->|Disgust| I["0.039"]
-    G -->|Fear| J["0.0103"]
-    G -->|Joy| K["0.048"]
-    G -->|Neutral| L["0.494"]
-    G -->|Sadness| M["0.021"]
-    G -->|Surprise| N["0.237"]
+    %% Emotion nodes: arrow labels show emotion category; node boxes show numeric values.
+    G -->|Anger| H["0.0"]
+    G -->|Disgust| I["0.0"]
+    G -->|Fear| J["0.01028"]
+    G -->|Joy| K["0.0"]
+    G -->|Neutral| L["0.02194"]
+    G -->|Sadness| M["1.0"]
+    G -->|Surprise| N["0.02158"]
 
-%% Style the edges for lower-probability sentiment arrows with a lighter stroke
-%% (Assuming the second and third edges from C are "Neutral" and "Positive")
+%% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
 linkStyle 3 stroke:#cccccc, stroke-width:1px;
 
@@ -110,41 +106,36 @@ linkStyle 3 stroke:#cccccc, stroke-width:1px;
 ### Sample Example 2
 ```mermaid
 graph TD;
-    %% Input and normalized text
+    %% Input and normalized text nodes
     A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
     B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
-
-    %% Sentiment stage
     C["Sentiment"]
-    
+
     A --> B
-    A --> C
+    A -->|Sentiment| C
 
-    %% Sentiment value nodes with values inside the box;
-    %% The arrow labels carry the category names.
-    C -->|Negative| D["4.43e-05"]
-    C -->|Neutral| E["0.99999"]
-    C -->|Positive| F["7.09e-05"]
+    %% Sentiment value nodes
+    C -->|Negative| D["0.99999"]
+    C -->|Neutral| E["6.89e-06"]
+    C -->|Positive| F["1.11e-05"]
 
-    %% All sentiment nodes feed into the Emotion stage.
+    %% Converge sentiment nodes to Emotion stage
     D -->|Emotion| G
     E -->|Emotion| G
     F -->|Emotion| G
 
-    %% Emotion stage: arrows label the emotion category, nodes contain the numeric value.
-    G -->|Anger| H["0.144"]
-    G -->|Disgust| I["0.039"]
-    G -->|Fear| J["0.0103"]
-    G -->|Joy| K["0.0"]
-    G -->|Neutral| L["0.0219"]
-    G -->|Sadness| M["1.0"]
-    G -->|Surprise| N["0.0216"]
+    %% Emotion nodes: arrow labels show emotion category; nodes show numeric values.
+    G -->|Anger| H["0.14403"]
+    G -->|Disgust| I["0.03928"]
+    G -->|Fear| J["0.01435"]
+    G -->|Joy| K["0.04897"]
+    G -->|Neutral| L["0.49485"]
+    G -->|Sadness| M["0.02111"]
+    G -->|Surprise| N["0.23741"]
 
-%% Style the edges for lower-probability sentiment arrows with a lighter stroke
-%% (Assuming the second and third edges from C are "Neutral" and "Positive")
+%% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
 linkStyle 3 stroke:#cccccc, stroke-width:1px;
-
 ```
 
 ### Sample Example 3
