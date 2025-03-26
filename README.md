@@ -65,7 +65,7 @@ Tachygraphy—originally developed to expedite writing—has evolved over centur
 ```mermaid
 graph TD;
     %% Input and normalized text nodes
-    A["Input Text: i don't know for real y he's sooo sad"]
+    A["Input Text: i don't know fr y he's sooo sad"]
     B["Normalized Text: i do not know for real why he's so sad"]
     C["Sentiment"]
 
