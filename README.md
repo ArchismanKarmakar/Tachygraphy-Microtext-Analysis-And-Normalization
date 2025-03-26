@@ -175,8 +175,8 @@ graph TD;
     G -->|Surprise| N["0.02158"]
 
 %% Style the Neutral and Positive sentiment arrows with a lighter stroke.
-linkStyle 2 stroke:#cccccc, stroke-width:1px;
-linkStyle 3 stroke:#cccccc, stroke-width:1px;
+linkStyle 6 stroke:#cccccc, stroke-width:1px;
+linkStyle 7 stroke:#cccccc, stroke-width:1px;
 
 ```
 
