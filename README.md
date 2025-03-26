@@ -69,7 +69,7 @@ Below is a Graphviz diagram illustrating a sample analysis:
 
 ### Sample Example 1
 ```mermaid
-graph LR;
+graph TD;
     %% Input and normalized text nodes
     A["Input Text: i don't know for real y he's sooo sad"]
     B["Normalized Text: i do not know for real why he's so sad"]
@@ -158,6 +158,8 @@ graph TD;
     D -->|Emotion| G
     E -->|Emotion| G
     F -->|Emotion| G
+
+    G
 
     %% Emotion nodes: arrow labels show emotion category; node boxes show numeric values.
     G -->|Anger| H["0.08018"]
