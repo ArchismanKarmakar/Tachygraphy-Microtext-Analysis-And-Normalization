@@ -60,12 +60,6 @@ Tachygraphy—originally developed to expedite writing—has evolved over centur
 
 ---
 
-## Sample Examples
-
-### Sample Example 1
-
-Below is a Graphviz diagram illustrating a sample analysis:
-
 
 ### Sample Example 1
 ```mermaid
