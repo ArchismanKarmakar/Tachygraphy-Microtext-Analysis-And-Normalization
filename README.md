@@ -75,41 +75,25 @@ graph TD;
     B["Normalized Text: i do not know for real why he's so sad"]
     C["Sentiment"]
     
-    D["negative: 0.995874803543091"]
-    E["neutral: 6.232635259628296e-05"]
-    F["positive: 2.0964847564697266e-05"]
+    C -- Negative: 0.9959 --> G["Emotion"]
+    C -- Neutral: 6.23e-05 --> G
+    C -- Positive: 2.10e-05 --> G
 
-    G["Emotion"]
-    
-    H["anger: 0.0"]
-    I["disgust: 0.0"]
-    J["fear: 0.010283803842246056"]
-    K["joy: 0.0"]
-    L["neutral: 0.021935827255129814"]
-    M["sadness: 1.0"]
-    N["surprise: 0.02158345977962017"]
+    G -- Anger: 0.0 --> H[" "]
+    G -- Disgust: 0.0 --> I[" "]
+    G -- Fear: 0.0103 --> J[" "]
+    G -- Joy: 0.0 --> K[" "]
+    G -- Neutral: 0.0219 --> L[" "]
+    G -- Sadness: 1.0 --> M[" "]
+    G -- Surprise: 0.0216 --> N[" "]
 
     A --> B
     A --> C
-    C --> D
-    C --> E
-    C --> F
 
-    D --> G
-    E --> G
-    F --> G
+%% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke.
+linkStyle 1 stroke:#cccccc, stroke-width:1px;
+linkStyle 2 stroke:#cccccc, stroke-width:1px;
 
-    G --> H
-    G --> I
-    G --> J
-    G --> K
-    G --> L
-    G --> M
-    G --> N
-
-%% Style the edges from "neutral" and "positive" to "Emotion" with a lighter stroke.
-linkStyle 6 stroke:#cccccc, stroke-width:2px;
-linkStyle 7 stroke:#cccccc, stroke-width:2px;
 
 ```
 
@@ -117,89 +101,52 @@ linkStyle 7 stroke:#cccccc, stroke-width:2px;
 ```mermaid
 graph TD;
     A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
-    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
+    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when I step up you are not going to say anything"]
     C["Sentiment"]
 
-    D["Negative: 0.9999861717224121"]
-    E["Neutral: 6.885089078423334e-06"]
-    F["Positive: 1.1117132999061141e-05"]
+    C -- Negative: 0.99998 --> G["Emotion"]
+    C -- Neutral: 6.88e-06 --> G
+    C -- Positive: 1.11e-05 --> G
 
-    G["Emotion"]
-
-    H["Anger: 0.14403291"]
-    I["Disgust: 0.039282672"]
-    J["Fear: 0.014349542"]
-    K["Joy: 0.048965044"]
-    L["Neutral: 0.494852662"]
-    M["Sadness: 0.021111647"]
-    N["Surprise: 0.237405464"]
+    G -- Anger: 0.144 --> H[" "]
+    G -- Disgust: 0.039 --> I[" "]
+    G -- Fear: 0.0143 --> J[" "]
+    G -- Joy: 0.0489 --> K[" "]
+    G -- Neutral: 0.4948 --> L[" "]
+    G -- Sadness: 0.0211 --> M[" "]
+    G -- Surprise: 0.2374 --> N[" "]
 
     A --> B
     A --> C
-    C --> D
-    C --> E
-    C --> F
 
-    D --> G
-    E --> G
-    F --> G
+%% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke.
+linkStyle 1 stroke:#cccccc, stroke-width:1px;
+linkStyle 2 stroke:#cccccc, stroke-width:1px;
 
-    G --> H
-    G --> I
-    G --> J
-    G --> K
-    G --> L
-    G --> M
-    G --> N
-
-%% Style the edges from "neutral" and "positive" to "Emotion" with a lighter stroke.
-linkStyle 6 stroke:#cccccc, stroke-width:1px;
-linkStyle 7 stroke:#cccccc, stroke-width:1px;
 
 ```
 
 ### Sample Example 3
-
 ```mermaid
 graph TD;
-    A["Input Text:bruh, floods in Kerala, rescue ops non‑stop 🚁"]
-    B["Normalized Text:Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
-    C["Sentiment"]
+    A["Input Text: bruh, floods in Kerala, rescue ops non‑stop 🚁"] --> B["Normalized Text: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
+    A --> C["Sentiment"]
     
-    D["Negative: 4.4367719965521246e-05"]
-    E["Neutral: 0.9998886585235596"]
-    F["Positive: 7.097498746588826e-05"]
+    C -- Negative: 4.43e-05 --> G["Emotion"]
+    C -- Neutral: 0.9999 --> G
+    C -- Positive: 7.09e-05 --> G
 
-    G["Emotion"]
+    G -- Anger: 0.08 --> H[" "]
+    G -- Disgust: 0.015 --> I[" "]
+    G -- Fear: 0.601 --> J[" "]
+    G -- Joy: 0.0041 --> K[" "]
+    G -- Neutral: 0.034 --> L[" "]
+    G -- Sadness: 0.245 --> M[" "]
+    G -- Surprise: 0.019 --> N[" "]
 
-    H["Anger: 0.080178231"]
-    I["Disgust: 0.015257259"]
-    J["Fear: 0.601871967"]
-    K["Joy: 0.00410547"]
-    L["Neutral: 0.0341026"]
-    M["Sadness: 0.245294735"]
-    N["Surprise: 0.019189769"]
+%% Style the edges from "Neutral" and "Positive" to "Emotion" (edges 2 and 3)
+linkStyle 2 stroke:#cccccc, stroke-width:1px;
+linkStyle 3 stroke:#cccccc, stroke-width:1px;
 
-    A --> B
-    A --> C
-    C --> D
-    C --> E
-    C --> F
-
-    D --> G
-    E --> G
-    F --> G
-
-    G --> H
-    G --> I
-    G --> J
-    G --> K
-    G --> L
-    G --> M
-    G --> N
-
-%% Style the edges from "Neutral" and "Positive" to "Emotion" (edges 6 and 7)
-linkStyle 6 stroke:#cccccc, stroke-width:1px;
-linkStyle 7 stroke:#cccccc, stroke-width:1px;
 ```
 
