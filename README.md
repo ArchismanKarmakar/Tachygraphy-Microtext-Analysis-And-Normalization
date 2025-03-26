@@ -114,31 +114,47 @@ linkStyle 7 stroke:#cccccc, stroke-width:2px;
 ```
 
 ### Sample Example 2
-digraph {
-    graph [bgcolor="white", rankdir=TB, splines=true, nodesep=0.8, ranksep=0.8];
-    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=9, margin="0.15,0.1"];
+```mermaid
+graph TD;
+    A["Input Text:\n you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
+    B["Normalized Text:\n you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
+    C["Sentiment"]
 
-    Input [label="Input:\nu rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t", fillcolor="#ffe6de", fontcolor="black"];
-    Output [label="Output:\nyou really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything", fillcolor="#ffe6de", fontcolor="black"];
-    Sentiment [label="Sentiment:\nNEGATIVE", fillcolor="#ecdeff", fontcolor="black"];
+    D["Negative: 0.9999861717224121"]
+    E["Neutral: 6.885089078423334e-06"]
+    F["Positive: 1.1117132999061141e-05"]
 
-    Anger [label="Anger: 0.14403291", fillcolor="#deffe1", fontcolor="black"];
-    Disgust [label="Disgust: 0.039282672", fillcolor="#deffe1", fontcolor="black"];
-    Fear [label="Fear: 0.014349542", fillcolor="#deffe1", fontcolor="black"];
-    Joy [label="Joy: 0.048965044", fillcolor="#deffe1", fontcolor="black"];
-    Neutral [label="Neutral: 0.494852662", fillcolor="#deffe1", fontcolor="black"];
-    Sadness [label="Sadness: 0.021111647", fillcolor="#deffe1", fontcolor="black"];
-    Surprise [label="Surprise: 0.237405464", fillcolor="#deffe1", fontcolor="black"];
+    G["Emotion"]
 
-    edge [color="#7a7a7a", penwidth=3];
+    H["Anger: 0.14403291"]
+    I["Disgust: 0.039282672"]
+    J["Fear: 0.014349542"]
+    K["Joy: 0.048965044"]
+    L["Neutral: 0.494852662"]
+    M["Sadness: 0.021111647"]
+    N["Surprise: 0.237405464"]
 
-    Input -> Output;
-    Input -> Sentiment;
-    Sentiment -> Anger;
-    Sentiment -> Disgust;
-    Sentiment -> Fear;
-    Sentiment -> Joy;
-    Sentiment ->
-::contentReference[oaicite:0]{index=0}
+    A --> B
+    A --> C
+    C --> D
+    C --> E
+    C --> F
+
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+    G --> L
+    G --> M
+    G --> N
+
+%% Style the edges from "neutral" and "positive" to "Emotion" with a lighter stroke.
+linkStyle 6 stroke:#cccccc, stroke-width:1px;
+linkStyle 7 stroke:#cccccc, stroke-width:1px;
+
 ```
 
