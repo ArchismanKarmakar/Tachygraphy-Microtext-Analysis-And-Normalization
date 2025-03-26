@@ -92,6 +92,7 @@ graph TD;
     G -->|Neutral| L["0.02194"]
     G -->|Sadness| M["1.0"]
     G -->|Surprise| N["0.02158"]
+    A --> G
 
 %% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 6 stroke:#cccccc, stroke-width:1px;
@@ -130,6 +131,7 @@ graph LR;
     G -->|Neutral| L["0.49485"]
     G -->|Sadness| M["0.02111"]
     G -->|Surprise| N["0.23741"]
+    A --> G
 
 %% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 6 stroke:#cccccc, stroke-width:1px;
@@ -167,6 +169,7 @@ graph TD;
     G -->|Neutral| L["0.02194"]
     G -->|Sadness| M["1.0"]
     G -->|Surprise| N["0.02158"]
+    A --> G
 
 %% Style the Neutral and Positive sentiment arrows with a lighter stroke.
 linkStyle 5 stroke:#cccccc, stroke-width:1px;
