@@ -158,3 +158,48 @@ linkStyle 7 stroke:#cccccc, stroke-width:1px;
 
 ```
 
+### Sample Example 3
+
+```mermaid
+graph TD;
+    A["Input Text:\nbruh, floods in Kerala, rescue ops non‑stop 🚁"]
+    B["Normalized Text:\nBrother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
+    C["Sentiment"]
+    
+    D["Negative: 4.4367719965521246e-05"]
+    E["Neutral: 0.9998886585235596"]
+    F["Positive: 7.097498746588826e-05"]
+
+    G["Emotion"]
+
+    H["Anger: 0.080178231"]
+    I["Disgust: 0.015257259"]
+    J["Fear: 0.601871967"]
+    K["Joy: 0.00410547"]
+    L["Neutral: 0.0341026"]
+    M["Sadness: 0.245294735"]
+    N["Surprise: 0.019189769"]
+
+    A --> B
+    A --> C
+    C --> D
+    C --> E
+    C --> F
+
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+    G --> L
+    G --> M
+    G --> N
+
+%% Style the edges from "Neutral" and "Positive" to "Emotion" (edges 6 and 7)
+linkStyle 6 stroke:#cccccc, stroke-width:1px;
+linkStyle 7 stroke:#cccccc, stroke-width:1px;
+```
+
