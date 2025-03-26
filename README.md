@@ -71,22 +71,45 @@ Below is a Graphviz diagram illustrating a sample analysis:
 
 ```mermaid
 graph TD;
-    A["Input Text:\n i don't know for real y he's sooo sad"] -->|Transformed| B["Normalized Text:\n i do not know for real why he's so sad"]
-    A -->|Analyzed| C["Sentiment"]
+    A["Input Text:\n i don't know for real y he's sooo sad"]
+    B["Normalized Text:\n i do not know for real why he's so sad"]
+    C["Sentiment"]
     
-    C -->|Probability: 0.9959| D["negative"]
-    C -->|Probability: 0.00006| E["neutral"]
-    C -->|Probability: 0.00002| F["positive"]
+    D["negative: 0.995874803543091"]
+    E["neutral: 6.232635259628296e-05"]
+    F["positive: 2.0964847564697266e-05"]
 
-    D --> G["Emotion"]
+    G["Emotion"]
     
-    G -->|Probability: 0.0000| H["anger"]
-    G -->|Probability: 0.0000| I["disgust"]
-    G -->|Probability: 0.0103| J["fear"]
-    G -->|Probability: 0.0000| K["joy"]
-    G -->|Probability: 0.0219| L["neutral"]
-    G -->|Probability: 1.0000| M["sadness"]
-    G -->|Probability: 0.0216| N["surprise"]
+    H["anger: 0.0"]
+    I["disgust: 0.0"]
+    J["fear: 0.010283803842246056"]
+    K["joy: 0.0"]
+    L["neutral: 0.021935827255129814"]
+    M["sadness: 1.0"]
+    N["surprise: 0.02158345977962017"]
+
+    A --> B
+    A --> C
+    C --> D
+    C --> E
+    C --> F
+
+    D --> G
+    E --> G
+    F --> G
+
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+    G --> L
+    G --> M
+    G --> N
+
+%% Style the edges from "neutral" and "positive" to "Emotion" with a lighter stroke.
+linkStyle 6 stroke:#cccccc, stroke-width:1px;
+linkStyle 7 stroke:#cccccc, stroke-width:1px;
 
 ```
 
