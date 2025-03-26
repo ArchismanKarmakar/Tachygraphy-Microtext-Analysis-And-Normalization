@@ -72,21 +72,22 @@ Below is a Graphviz diagram illustrating a sample analysis:
 ```mermaid
 graph TD;
     A["Input Text:\n i don't know for real y he's sooo sad"] -->|Transformed| B["Normalized Text:\n i do not know for real why he's so sad"]
-    B -->|Analyzed| C["Sentiment"]
+    A -->|Analyzed| C["Sentiment"]
     
-    C -->|0.9958748| D["negative"]
-    C -->|0.0000623| E["neutral"]
-    C -->|0.0000209| F["positive"]
+    C -->|Probability: 0.9959| D["negative"]
+    C -->|Probability: 0.00006| E["neutral"]
+    C -->|Probability: 0.00002| F["positive"]
 
-    B --> G["Emotion"]
+    D --> G["Emotion"]
     
-    G -->|0.0000| H["anger"]
-    G -->|0.0000| I["disgust"]
-    G -->|0.0102| J["fear"]
-    G -->|0.0000| K["joy"]
-    G -->|0.0219| L["neutral"]
-    G -->|1.0000| M["sadness"]
-    G -->|0.0215| N["surprise"]
+    G -->|Probability: 0.0000| H["anger"]
+    G -->|Probability: 0.0000| I["disgust"]
+    G -->|Probability: 0.0103| J["fear"]
+    G -->|Probability: 0.0000| K["joy"]
+    G -->|Probability: 0.0219| L["neutral"]
+    G -->|Probability: 1.0000| M["sadness"]
+    G -->|Probability: 0.0216| N["surprise"]
+
 ```
 
 ### Sample Example 2
