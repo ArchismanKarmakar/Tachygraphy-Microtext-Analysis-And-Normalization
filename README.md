@@ -101,27 +101,29 @@ linkStyle 2 stroke:#cccccc, stroke-width:1px;
 ```mermaid
 graph TD;
     A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
-    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when I step up you are not going to say anything"]
+    B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
     C["Sentiment"]
-
-    C -- Negative: 0.99998 --> G["Emotion"]
-    C -- Neutral: 6.88e-06 --> G
-    C -- Positive: 1.11e-05 --> G
-
-    G -- Anger: 0.144 --> H[" "]
-    G -- Disgust: 0.039 --> I[" "]
-    G -- Fear: 0.0143 --> J[" "]
-    G -- Joy: 0.0489 --> K[" "]
-    G -- Neutral: 0.4948 --> L[" "]
-    G -- Sadness: 0.0211 --> M[" "]
-    G -- Surprise: 0.2374 --> N[" "]
+    G["Emotion"]
 
     A --> B
     A --> C
 
-%% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke.
-linkStyle 1 stroke:#cccccc, stroke-width:1px;
+    C -->|"Negative: 0.99999"| G
+    C -->|"Neutral: 6.88e-06"| G
+    C -->|"Positive: 1.11e-05"| G
+
+    G -->|"Anger: 0.144"| H[ ]
+    G -->|"Disgust: 0.039"| I[ ]
+    G -->|"Fear: 0.014"| J[ ]
+    G -->|"Joy: 0.048"| K[ ]
+    G -->|"Neutral: 0.494"| L[ ]
+    G -->|"Sadness: 0.021"| M[ ]
+    G -->|"Surprise: 0.237"| N[ ]
+
+%% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
+linkStyle 3 stroke:#cccccc, stroke-width:1px;
+
 
 
 ```
@@ -129,24 +131,30 @@ linkStyle 2 stroke:#cccccc, stroke-width:1px;
 ### Sample Example 3
 ```mermaid
 graph TD;
-    A["Input Text: bruh, floods in Kerala, rescue ops non‑stop 🚁"] --> B["Normalized Text: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
-    A --> C["Sentiment"]
-    
-    C -- Negative: 4.43e-05 --> G["Emotion"]
-    C -- Neutral: 0.9999 --> G
-    C -- Positive: 7.09e-05 --> G
+    A["Input Text: bruh, floods in Kerala, rescue ops non‑stop 🚁"]
+    B["Normalized Text: Brother, the floods in Kerala are severe, and rescue operations are ongoing continuously."]
+    C["Sentiment"]
+    G["Emotion"]
 
-    G -- Anger: 0.08 --> H[" "]
-    G -- Disgust: 0.015 --> I[" "]
-    G -- Fear: 0.601 --> J[" "]
-    G -- Joy: 0.0041 --> K[" "]
-    G -- Neutral: 0.034 --> L[" "]
-    G -- Sadness: 0.245 --> M[" "]
-    G -- Surprise: 0.019 --> N[" "]
+    A --> B
+    A --> C
 
-%% Style the edges from "Neutral" and "Positive" to "Emotion" (edges 2 and 3)
+    C -->|Negative: 4.43e-05| G
+    C -->|Neutral: 0.9999| G
+    C -->|Positive: 7.09e-05| G
+
+    G -->|Anger: 0.0801| H[ ]
+    G -->|Disgust: 0.0152| I[ ]
+    G -->|Fear: 0.6019| J[ ]
+    G -->|Joy: 0.0041| K[ ]
+    G -->|Neutral: 0.0341| L[ ]
+    G -->|Sadness: 0.2453| M[ ]
+    G -->|Surprise: 0.0192| N[ ]
+
+%% Style the edges from "Neutral" and "Positive" to "Emotion" with a lighter stroke
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
 linkStyle 3 stroke:#cccccc, stroke-width:1px;
+
 
 ```
 
