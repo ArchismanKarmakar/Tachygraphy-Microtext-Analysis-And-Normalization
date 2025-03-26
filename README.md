@@ -71,8 +71,8 @@ Below is a Graphviz diagram illustrating a sample analysis:
 
 ```mermaid
 graph TD;
-    A["Input Text:\n i don't know for real y he's sooo sad"]
-    B["Normalized Text:\n i do not know for real why he's so sad"]
+    A["Input Text: i don't know for real y he's sooo sad"]
+    B["Normalized Text: i do not know for real why he's so sad"]
     C["Sentiment"]
     
     D["negative: 0.995874803543091"]
@@ -108,8 +108,8 @@ graph TD;
     G --> N
 
 %% Style the edges from "neutral" and "positive" to "Emotion" with a lighter stroke.
-linkStyle 6 stroke:#cccccc, stroke-width:1px;
-linkStyle 7 stroke:#cccccc, stroke-width:1px;
+linkStyle 6 stroke:#cccccc, stroke-width:2px;
+linkStyle 7 stroke:#cccccc, stroke-width:2px;
 
 ```
 
