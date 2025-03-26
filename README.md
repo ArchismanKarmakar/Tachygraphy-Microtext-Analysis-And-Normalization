@@ -68,30 +68,30 @@ Below is a Graphviz diagram illustrating a sample analysis:
 
 
 ### Sample Example 1
-
 ```mermaid
 graph TD;
-    %% Input and normalized text nodes with full text
+    %% Input and normalized text
     A["Input Text: you rlly think all that talk means u tough? lol, when I step up, u ain't gon say sh*t"]
     B["Normalized Text: you really think all that talk makes you tough [lol](laughed out loud) when i step up you are not going to say anything"]
-    
-    %% Blank node for the sentiment stage (values come on the arrows)
-    C[""]
-    
-    %% Blank node for the emotion stage (values come on the arrows)
-    G[""]
 
-    %% Flow from input to sentiment
+    %% Sentiment stage
+    C["Sentiment"]
+    
     A --> B
-    A -->|Sentiment| C
+    A --> C
 
-    %% From sentiment stage to emotion stage, with sentiment category and value on the arrow.
-    C -->|Negative: 0.99999| G
-    C -->|Neutral: 6.23e-05| G:::light
-    C -->|Positive: 7.09e-05| G:::light
+    %% Sentiment value nodes with values inside the box;
+    %% The arrow labels carry the category names.
+    C -->|Negative| D["0.99999"]
+    C -->|Neutral| E["6.23e-05"]
+    C -->|Positive| F["7.09e-05"]
 
-    %% From emotion stage to each emotion node: arrow labels show emotion category,
-    %% and each node contains only the numeric value.
+    %% All sentiment nodes feed into the Emotion stage.
+    D -->|Emotion| G
+    E -->|Emotion| G
+    F -->|Emotion| G
+
+    %% Emotion stage: arrows label the emotion category, nodes contain the numeric value.
     G -->|Anger| H["0.144"]
     G -->|Disgust| I["0.039"]
     G -->|Fear| J["0.0103"]
@@ -100,10 +100,10 @@ graph TD;
     G -->|Sadness| M["0.021"]
     G -->|Surprise| N["0.237"]
 
-%% Define a CSS class "light" to style selected edges with a lighter stroke.
-classDef light stroke:#cccccc, stroke-width:1px;
-
-
+%% Style the edges for lower-probability sentiment arrows with a lighter stroke
+%% (Assuming the second and third edges from C are "Neutral" and "Positive")
+linkStyle 2 stroke:#cccccc, stroke-width:1px;
+linkStyle 3 stroke:#cccccc, stroke-width:1px;
 
 ```
 
@@ -144,9 +144,6 @@ graph TD;
 %% (Assuming the second and third edges from C are "Neutral" and "Positive")
 linkStyle 2 stroke:#cccccc, stroke-width:1px;
 linkStyle 3 stroke:#cccccc, stroke-width:1px;
-
-
-
 
 ```
 
