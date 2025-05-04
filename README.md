@@ -1,7 +1,7 @@
-# Tachygraphy Micro-text Analysis And Normalization
+# Tachygraphy based Micro-text Analysis And Normalization
 <!---
 ---
-title: "Tachygraphy Micro-text Analysis & Normalization"
+title: "Tachygraphy based Micro-text Analysis & Normalization"
 emoji: "⚡"
 colorFrom: "pink"
 colorTo: "blue"
@@ -24,9 +24,9 @@ pinned: false
   
 <!-- ![Project Logo](https://via.placeholder.com/150) -->
 
-# Tachygraphy Micro-text Analysis & Normalization
+# Tachygraphy based Micro-text Analysis & Normalization
 
-*Welcome to the Tachygraphy Micro-text Analysis & Normalization Project. This page outlines our project’s key stages, sources, sample analysis examples, and team information.*
+*Welcome to the Tachygraphy based Micro-text Analysis & Normalization Project. This page outlines our project’s key stages, sources, sample analysis examples, and team information.*
 
 </div>
 
